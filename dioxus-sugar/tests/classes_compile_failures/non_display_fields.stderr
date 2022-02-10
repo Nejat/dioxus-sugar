@@ -1,0 +1,9 @@
+error[E0277]: `Value` doesn't implement `std::fmt::Display`
+ --> tests/classes_compile_failures/non_display_fields.rs:9:1
+  |
+9 | #[classes(value)]
+  | ^^^^^^^^^^^^^^^^^ `Value` cannot be formatted with the default formatter
+  |
+  = help: the trait `std::fmt::Display` is not implemented for `Value`
+  = note: in format strings you may be able to use `{:?}` (or {:#?} for pretty-print) instead
+  = note: this error originates in the macro `$crate::format_args` (in Nightly builds, run with -Z macro-backtrace for more info)

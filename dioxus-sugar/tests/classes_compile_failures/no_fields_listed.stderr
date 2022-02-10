@@ -1,0 +1,7 @@
+error: no fields were marked as `class`, remove 'classes' attribute from 'Props' or tag one or more fields
+ --> tests/classes_compile_failures/no_fields_listed.rs:3:1
+  |
+3 | #[classes]
+  | ^^^^^^^^^^
+  |
+  = note: this error originates in the attribute macro `classes` (in Nightly builds, run with -Z macro-backtrace for more info)

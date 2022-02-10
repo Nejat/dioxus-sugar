@@ -15,10 +15,11 @@ categories = ["GUI", "Web programming", "WebAssembly"]
 proc-macro = true
 
 [dependencies]
-darling = "0.13"
+proc-macro-error = "1"
 proc-macro2 = "1"
 quote = "1"
 syn = { version = "1", features = ["full"] }
 
 [dev-dependencies]
+trybuild = "1"
 version-sync = "0.9"

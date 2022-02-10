@@ -1,0 +1,5 @@
+error: named values are not supported
+ --> tests/classes_compile_failures/named_path_values.rs:3:11
+  |
+3 | #[classes(named = 42)]
+  |           ^^^^^^^^^^

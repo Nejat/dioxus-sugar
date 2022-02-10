@@ -1,0 +1,21 @@
+error: 2 fields were tagged as 'class' more than once: ["name", "id"]
+ --> tests/classes_compile_failures/duplicate_declarations.rs:4:1
+  |
+4 | / struct PropsMultipleDupes {
+5 | |     #[class]
+6 | |     name: String,
+7 | |     #[class]
+8 | |     id: String
+9 | | }
+  | |_^
+
+error: 1 field was tagged as 'class' more than once: ["name"]
+  --> tests/classes_compile_failures/duplicate_declarations.rs:12:1
+   |
+12 | / struct PropsSingleDupe {
+13 | |     #[class]
+14 | |     name: String,
+15 | |     #[class]
+16 | |     id: String
+17 | | }
+   | |_^
