@@ -10,6 +10,14 @@
 #![doc(html_root_url = "https://docs.rs/dioxus-sugar/0.1.0")]
 
 //! # Dioxus Sugar
+//!
+//! A collection of macros for simplifying the creation of custom [`Dioxus`] elements
+//!
+//! - `classes` attribute implements the [`Display`] trait for selected fields on a
+//!    properties `struct`
+//! - ``
+//!
+//! [`Dioxus`] (https://dioxuslabs.com/)
 
 #[macro_use]
 extern crate proc_macro_error;
@@ -24,6 +32,7 @@ mod class;
 
 #[cfg(test)]
 mod publish_tests;
+
 
 /// # `classes` Attribute
 #[proc_macro_attribute]
