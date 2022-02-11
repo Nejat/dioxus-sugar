@@ -1,4 +1,4 @@
-error: 2 fields were tagged as 'class' more than once: ["name", "id"]
+error: 2 fields were tagged as 'class' more than once: ["id", "name"]
  --> tests/classes_compile_failures/duplicate_declarations.rs:4:1
   |
 4 | / struct PropsMultipleDupes {

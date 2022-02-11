@@ -75,11 +75,15 @@ pub fn impl_display_for_struct(
 
     // abort if any duplicates found
     if !duplicates.is_empty() {
+        let mut duplicates = duplicates.iter().collect::<Vec<_>>();
+
+        duplicates.sort();
+
         abort!(
             input.to_token_stream(),
             "{} field{} tagged as 'class' more than once: {:?}",
             duplicates.len(), if duplicates.len() == 1 { " was" } else { "s were" },
-            duplicates.iter().collect::<Vec<_>>()
+            duplicates
         );
     }
 
