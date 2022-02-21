@@ -6,18 +6,18 @@ use dioxus_sugar::classes;
 fn expected_classes_compile_failures() {
     let tests = TestCases::new();
 
-    tests.compile_fail("tests/classes_compile_failures/*.rs");
+    tests.compile_fail("tests/compile_failures/classes/*.rs");
 }
 
 #[test]
 fn given_a_struct_with_fields_listed_in_classes_attr_should_display_fields() {
-    #[classes(id)]
+    #[classes(other_field)]
     struct Sut {
-        _name: &'static str,
-        id: &'static str,
+        _field_one: &'static str,
+        other_field: &'static str,
     }
 
-    let sut = Sut { _name: "Jack", id: "jk1" };
+    let sut = Sut { _field_one: "Jack", other_field: "jk1" };
 
     assert_eq!("jk1", format!("{}", sut));
 }
@@ -26,26 +26,26 @@ fn given_a_struct_with_fields_listed_in_classes_attr_should_display_fields() {
 fn given_a_struct_with_fields_decorated_with_class_attr_should_display_fields() {
     #[classes]
     struct Sut {
-        _name: &'static str,
+        _field_one: &'static str,
         #[class]
-        id: &'static str,
+        other_field: &'static str,
     }
 
-    let sut = Sut { _name: "Jack", id: "jk1" };
+    let sut = Sut { _field_one: "Jack", other_field: "jk1" };
 
     assert_eq!("jk1", format!("{}", sut));
 }
 
 #[test]
 fn given_a_struct_with_class_fields_and_classes_attr_should_display_fields() {
-    #[classes(name)]
+    #[classes(field_one)]
     struct Sut {
-        name: &'static str,
+        field_one: &'static str,
         #[class]
-        id: &'static str,
+        other_field: &'static str,
     }
 
-    let sut = Sut { name: "Jack", id: "jk1" };
+    let sut = Sut { field_one: "Jack", other_field: "jk1" };
 
     assert_eq!("Jackjk1", format!("{}", sut));
 }

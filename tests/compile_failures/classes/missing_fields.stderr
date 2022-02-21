@@ -1,5 +1,5 @@
 error[E0609]: no field `id` on type `&Props`
- --> tests/classes_compile_failures/missing_fields.rs:3:11
+ --> tests/compile_failures/classes/missing_fields.rs:3:11
   |
 3 | #[classes(id)]
   |           ^^ unknown field

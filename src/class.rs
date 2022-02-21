@@ -144,13 +144,17 @@ fn include_fields(args: &AttributeArgs) -> impl Iterator<Item=&Ident> {
                     match meta {
                         Meta::Path(path) if path.segments.len() == 1 =>
                             path.segments.iter().map(|s| &s.ident).next(),
+
                         Meta::Path(unexpected) =>
                             fail(&unexpected.to_token_stream(), META_PATH),
+
                         Meta::List(unexpected) =>
                             fail(&unexpected.to_token_stream(), META_LIST),
+
                         Meta::NameValue(unexpected) =>
                             fail(&unexpected.to_token_stream(), META_NAME_VALUE),
                     },
+
                 NestedMeta::Lit(unexpected) =>
                     fail(&unexpected.to_token_stream(), META_LITERAL),
             }

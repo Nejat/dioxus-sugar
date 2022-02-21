@@ -1,5 +1,5 @@
 error[E0277]: `Value` doesn't implement `std::fmt::Display`
- --> tests/classes_compile_failures/non_display_fields.rs:9:1
+ --> tests/compile_failures/classes/non_display_fields.rs:9:1
   |
 9 | #[classes(value)]
   | ^^^^^^^^^^^^^^^^^ `Value` cannot be formatted with the default formatter

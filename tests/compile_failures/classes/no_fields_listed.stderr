@@ -1,5 +1,5 @@
 error: no fields were marked as `class`, remove 'classes' attribute from 'Props' or tag one or more fields
- --> tests/classes_compile_failures/no_fields_listed.rs:3:1
+ --> tests/compile_failures/classes/no_fields_listed.rs:3:1
   |
 3 | #[classes]
   | ^^^^^^^^^^

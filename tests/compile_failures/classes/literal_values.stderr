@@ -1,11 +1,11 @@
 error: literals are not supported
- --> tests/classes_compile_failures/literal_values.rs:3:11
+ --> tests/compile_failures/classes/literal_values.rs:3:11
   |
 3 | #[classes(42)]
   |           ^^
 
 error: literals are not supported
- --> tests/classes_compile_failures/literal_values.rs:6:11
+ --> tests/compile_failures/classes/literal_values.rs:6:11
   |
 6 | #[classes("42")]
   |           ^^^^
