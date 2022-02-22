@@ -29,6 +29,6 @@ fn given_a_struct_with_attribute_and_tag_extensions_and_excludes_listed_it_shoul
 
 #[test]
 fn given_a_struct_with_tag_extensions_it_should_extend_struct() {
-    #[attributes(button, div)]
+    #[attributes(button, div, basic)]
     struct _Sut;
 }

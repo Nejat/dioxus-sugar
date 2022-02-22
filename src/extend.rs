@@ -1,10 +1,17 @@
 use proc_macro::Span;
+
 use proc_macro2::{Ident, TokenStream};
 use quote::ToTokens;
 use syn::{AttributeArgs, ItemStruct, Meta, NestedMeta, Path};
 use web_reference::prelude::*;
 
 use crate::SPECS;
+
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub struct Extension {
+    name: Ident,
+    exclude: bool,
+}
 
 pub fn extend_struct_attributes(
     input: &mut ItemStruct, args: &AttributeArgs,
@@ -27,13 +34,31 @@ pub fn extend_struct_attributes(
 
             abort!(&path.to_token_stream(), format!("invalid attribute or tag {attribute:?}"));
         },
-    ).collect::<Vec<_>>();
+    ).flat_map(|ext| {
+        if ext.name == "global" {
+            SPECS.get_attributes_of_category(AttributeCategory::GlobalAttributes).unwrap()
+                .into_iter()
+                .map(|attr| Extension {
+                    name: Ident::new(attr.name.trim_end_matches("-*"), ext.name.span()),
+                    exclude: ext.exclude
+                })
+                .collect::<Vec<_>>()
+        } else if let Ok(tags_category) = TagCategory::try_from(ext.name.to_string().as_str()) {
+            SPECS.get_tags_of_category(tags_category).unwrap()
+                .into_iter()
+                .map(|attr| Extension {
+                    name: Ident::new(attr.name.trim_end_matches("-*"), ext.name.span()),
+                    exclude: ext.exclude
+                })
+                .collect::<Vec<_>>()
+        } else {
+            vec![ext]
+        }
+    }).collect::<Vec<_>>();
 
     if extensions.is_empty() {
         abort!(Span::call_site(), "no attributes or tags were listed, remove 'attributes' macro or add an attribute or tag");
     }
-
-    // todo expand global attributes and tag categories
 
     check_net_extensions(&extensions, "no net attributes or tags to extend, check exclude list");
 
@@ -55,9 +80,19 @@ pub fn extend_struct_events(
 
             abort!(&path.to_token_stream(), format!("invalid event {event:?}"))
         },
-    ).collect::<Vec<_>>();
-
-    // todo expand event categories
+    ).flat_map(|ext| {
+        if let Ok(event_category) = EventCategory::try_from(ext.name.to_string().as_str()) {
+            SPECS.get_events_of_category(event_category).unwrap()
+                .into_iter()
+                .map(|attr| Extension {
+                    name: Ident::new(&attr.name, ext.name.span()),
+                    exclude: ext.exclude
+                })
+                .collect::<Vec<_>>()
+        } else {
+            vec![ext]
+        }
+    }).collect::<Vec<_>>();
 
     if extensions.is_empty() {
         abort!(Span::call_site(), "no events were listed, remove 'events' macro or add an event")
@@ -68,19 +103,13 @@ pub fn extend_struct_events(
     quote! { #input }
 }
 
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct Extension<'a> {
-    name: &'a Ident,
-    exclude: bool,
-}
-
 fn check_net_extensions(extensions: &[Extension], error: &str) {
     let include = extensions.iter()
-        .filter_map(|ext| if ext.exclude { None } else { Some(ext.name) })
+        .filter_map(|ext| if ext.exclude { None } else { Some(ext.name.clone()) })
         .collect::<Vec<_>>();
 
     let exclude = extensions.iter()
-        .filter_map(|ext| if ext.exclude { Some(ext.name) } else { None })
+        .filter_map(|ext| if ext.exclude { Some(ext.name.clone()) } else { None })
         .collect::<Vec<_>>();
 
     if include.iter().all(|inc| exclude.contains(inc)) {
@@ -90,7 +119,7 @@ fn check_net_extensions(extensions: &[Extension], error: &str) {
 
 fn extensions<'a>(
     args: &'a AttributeArgs, attr_type: &'a str, validate_extension: fn(&'a Path),
-) -> impl Iterator<Item=Extension<'a>> {
+) -> impl Iterator<Item=Extension> +'a {
     const EXCLUDE: &str = "exclude";
 
     args.iter()
@@ -98,7 +127,7 @@ fn extensions<'a>(
             NestedMeta::Meta(Meta::Path(path)) if path.get_ident().is_some() => {
                 validate_extension(path);
 
-                vec![Extension { name: path.get_ident().unwrap(), exclude: false }]
+                vec![Extension { name: path.get_ident().unwrap().clone(), exclude: false }]
             }
 
             NestedMeta::Meta(Meta::List(list)) if list.path.to_token_stream().to_string() == EXCLUDE =>
@@ -107,7 +136,7 @@ fn extensions<'a>(
                         NestedMeta::Meta(Meta::Path(path)) if path.segments.len() == 1 => {
                             validate_extension(path);
 
-                            path.segments.iter().map(|seg| Extension { name: &seg.ident, exclude: true })
+                            path.segments.iter().map(|seg| Extension { name: seg.ident.clone(), exclude: true })
                         }
 
                         _ => abort!(&arg.to_token_stream(), format!(r#"not a valid {attr_type}"#))

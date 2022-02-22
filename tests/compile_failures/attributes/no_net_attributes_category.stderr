@@ -1,0 +1,7 @@
+error: no net attributes or tags to extend, check exclude list
+ --> tests/compile_failures/attributes/no_net_attributes_category.rs:3:1
+  |
+3 | #[attributes(global, exclude(accesskey, class, contenteditable, data, dir, draggable, hidden, id, lang, spellcheck, style, tabindex, title, translate))]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in the attribute macro `attributes` (in Nightly builds, run with -Z macro-backtrace for more info)
