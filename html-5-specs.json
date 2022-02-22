@@ -10430,6 +10430,52 @@
         }
       }
     },
+    "online": {
+      "name": "online",
+      "belongs-to": "not-defined",
+      "description": "The event occurs when the browser starts to work online",
+      "details": {
+        "bubbles": true,
+        "cancelable": true
+      },
+      "event-objects": [
+        "Event"
+      ],
+      "supported": {
+        "supported": {
+          "chrome": {
+            "version": {
+              "version": "Not supported",
+              "caveat": 0
+            }
+          },
+          "edge": {
+            "version": {
+              "version": "Deprecated as of IE118.0",
+              "caveat": 0
+            }
+          },
+          "firefox": {
+            "version": {
+              "version": "3.0",
+              "caveat": 0
+            }
+          },
+          "safari": {
+            "version": {
+              "version": "Not supported",
+              "caveat": 0
+            }
+          },
+          "opera": {
+            "version": {
+              "version": "Not supported",
+              "caveat": 0
+            }
+          }
+        }
+      }
+    },
     "onload": {
       "name": "onload",
       "belongs-to": {
@@ -10811,56 +10857,6 @@
         ]
       },
       "description": "The event occurs when the browser starts to work offline",
-      "details": {
-        "bubbles": true,
-        "cancelable": true
-      },
-      "event-objects": [
-        "Event"
-      ],
-      "supported": {
-        "supported": {
-          "chrome": {
-            "version": {
-              "version": "Not supported",
-              "caveat": 0
-            }
-          },
-          "edge": {
-            "version": {
-              "version": "Deprecated as of IE118.0",
-              "caveat": 0
-            }
-          },
-          "firefox": {
-            "version": {
-              "version": "3.0",
-              "caveat": 0
-            }
-          },
-          "safari": {
-            "version": {
-              "version": "Not supported",
-              "caveat": 0
-            }
-          },
-          "opera": {
-            "version": {
-              "version": "Not supported",
-              "caveat": 0
-            }
-          }
-        }
-      }
-    },
-    "ononline": {
-      "name": "ononline",
-      "belongs-to": {
-        "tags": [
-          "body"
-        ]
-      },
-      "description": "The event occurs when the browser starts to work online",
       "details": {
         "bubbles": true,
         "cancelable": true
@@ -12020,114 +12016,114 @@
       "category": "window-events",
       "description": "Events triggered for the window object (applies to the <body> tag):",
       "events": [
-        "ononafterprint",
-        "ononbeforeprint",
-        "ononbeforeunload",
-        "ononerror",
-        "ononhashchange",
-        "ononload",
-        "ononmessage",
-        "ononoffline",
-        "onononline",
-        "ononpagehide",
-        "ononpageshow",
-        "ononpopstate",
-        "ononresize",
-        "ononstorage",
-        "ononunload"
+        "onafterprint",
+        "onbeforeprint",
+        "onbeforeunload",
+        "onerror",
+        "onhashchange",
+        "onload",
+        "onmessage",
+        "onoffline",
+        "ononline",
+        "onpagehide",
+        "onpageshow",
+        "onpopstate",
+        "onresize",
+        "onstorage",
+        "onunload"
       ]
     },
     "form-events": {
       "category": "form-events",
       "description": "Events triggered by actions inside a HTML form (applies to almost all HTML elements, but is most used in form elements):",
       "events": [
-        "ononblur",
-        "ononchange",
-        "ononcontextmenu",
-        "ononfocus",
-        "ononinput",
-        "ononinvalid",
-        "ononreset",
-        "ononsearch",
-        "ononselect",
-        "ononsubmit"
+        "onblur",
+        "onchange",
+        "oncontextmenu",
+        "onfocus",
+        "oninput",
+        "oninvalid",
+        "onreset",
+        "onsearch",
+        "onselect",
+        "onsubmit"
       ]
     },
     "keyboard-events": {
       "category": "keyboard-events",
       "events": [
-        "ononkeydown",
-        "ononkeypress",
-        "ononkeyup"
+        "onkeydown",
+        "onkeypress",
+        "onkeyup"
       ]
     },
     "mouse-events": {
       "category": "mouse-events",
       "events": [
-        "ononclick",
-        "onondblclick",
-        "ononmousedown",
-        "ononmousemove",
-        "ononmouseout",
-        "ononmouseover",
-        "ononmouseup",
-        "ononmousewheel",
-        "ononwheel"
+        "onclick",
+        "ondblclick",
+        "onmousedown",
+        "onmousemove",
+        "onmouseout",
+        "onmouseover",
+        "onmouseup",
+        "onmousewheel",
+        "onwheel"
       ]
     },
     "drag-events": {
       "category": "drag-events",
       "events": [
-        "onondrag",
-        "onondragend",
-        "onondragenter",
-        "onondragleave",
-        "onondragover",
-        "onondragstart",
-        "onondrop",
-        "ononscroll"
+        "ondrag",
+        "ondragend",
+        "ondragenter",
+        "ondragleave",
+        "ondragover",
+        "ondragstart",
+        "ondrop",
+        "onscroll"
       ]
     },
     "clipboard-events": {
       "category": "clipboard-events",
       "events": [
-        "ononcopy",
-        "ononcut",
-        "ononpaste"
+        "oncopy",
+        "oncut",
+        "onpaste"
       ]
     },
     "media-events": {
       "category": "media-events",
       "description": "Events triggered by medias like videos, images and audio (applies to all HTML elements, but is most common in media elements, like <audio>, <embed>, <img>, <object>, and <video>).",
       "events": [
-        "abort",
-        "canplay",
-        "canplaythrough",
-        "durationchange",
-        "emptied",
-        "ended",
-        "error",
-        "loadeddata",
-        "loadedmetadata",
-        "loadstart",
-        "pause",
-        "play",
-        "playing",
-        "progress",
-        "ratechange",
-        "seeked",
-        "seeking",
-        "stalled",
-        "suspend",
-        "timeupdate",
-        "volumechange",
-        "waiting"
+        "onabort",
+        "oncanplay",
+        "oncanplaythrough",
+        "ondurationchange",
+        "onemptied",
+        "onended",
+        "onerror",
+        "onloadeddata",
+        "onloadedmetadata",
+        "onloadstart",
+        "onpause",
+        "onplay",
+        "onplaying",
+        "onprogress",
+        "onratechange",
+        "onseeked",
+        "onseeking",
+        "onstalled",
+        "onsuspend",
+        "ontimeupdate",
+        "onvolumechange",
+        "onwaiting"
       ]
     },
     "miscellaneous-events": {
       "category": "miscellaneous-events",
       "events": [
-        "onontoggle"
+        "ontoggle"
       ]
     }
   },
