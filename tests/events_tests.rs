@@ -1,6 +1,6 @@
-use dioxus_sugar::events;
-
 use trybuild::TestCases;
+
+use dioxus_sugar::events;
 
 #[test]
 fn expected_events_compile_failures() {

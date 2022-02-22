@@ -29,6 +29,7 @@ extern crate quote;
 extern crate syn;
 
 use proc_macro::TokenStream;
+
 use web_reference::prelude::*;
 
 mod extend;
@@ -48,11 +49,9 @@ pub fn attributes(attr: TokenStream, item: TokenStream) -> TokenStream {
     let args = parse_macro_input!(attr as syn::AttributeArgs);
     let mut source = parse_macro_input!(item as syn::ItemStruct);
 
-    let extended = extend::extend_struct_attributes(&mut source, &args);
+    let extended = extend::attributes::input_struct(&mut source, &args);
 
-    (quote! {
-        #extended
-    }).into()
+    (quote! { #extended }).into()
 }
 
 /// # `classes` Attribute
@@ -78,9 +77,7 @@ pub fn events(attr: TokenStream, item: TokenStream) -> TokenStream {
     let args = parse_macro_input!(attr as syn::AttributeArgs);
     let mut source = parse_macro_input!(item as syn::ItemStruct);
 
-    let extended = extend::extend_struct_events(&mut source, &args);
+    let extended = extend::events::input_struct(&mut source, &args);
 
-    (quote! {
-        #extended
-    }).into()
+    (quote! { #extended }).into()
 }

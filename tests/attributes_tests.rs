@@ -1,6 +1,6 @@
-use dioxus_sugar::attributes;
-
 use trybuild::TestCases;
+
+use dioxus_sugar::attributes;
 
 #[test]
 fn expected_attributes_compile_failures() {

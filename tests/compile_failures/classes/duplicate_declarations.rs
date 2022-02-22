@@ -5,7 +5,7 @@ struct PropsMultipleDupes {
     #[class]
     name: String,
     #[class]
-    id: String
+    id: String,
 }
 
 #[classes(name)]
@@ -13,7 +13,7 @@ struct PropsSingleDupe {
     #[class]
     name: String,
     #[class]
-    id: String
+    id: String,
 }
 
 fn main() {}
