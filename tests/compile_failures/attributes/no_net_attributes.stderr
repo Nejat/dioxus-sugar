@@ -1,0 +1,15 @@
+error: no net attributes or tags to extend, check exclude list
+ --> tests/compile_failures/attributes/no_net_attributes.rs:3:1
+  |
+3 | #[attributes(href, div, exclude(href, div, class))]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in the attribute macro `attributes` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: no net attributes or tags to extend, check exclude list
+ --> tests/compile_failures/attributes/no_net_attributes.rs:9:1
+  |
+9 | #[attributes(exclude(href, div, class))]
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in the attribute macro `attributes` (in Nightly builds, run with -Z macro-backtrace for more info)

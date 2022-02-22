@@ -1,0 +1,7 @@
+error: no attributes or tags were listed, remove 'attributes' macro or add an attribute or tag
+ --> tests/compile_failures/attributes/no_attributes_listed.rs:3:1
+  |
+3 | #[attributes]
+  | ^^^^^^^^^^^^^
+  |
+  = note: this error originates in the attribute macro `attributes` (in Nightly builds, run with -Z macro-backtrace for more info)

@@ -1,0 +1,5 @@
+error: not a valid event
+ --> tests/compile_failures/events/named_path_values.rs:3:10
+  |
+3 | #[events(event = "onclick")]
+  |          ^^^^^^^^^^^^^^^^^

@@ -20,6 +20,8 @@
 //! [`Dioxus`] (https://dioxuslabs.com/)
 
 #[macro_use]
+extern crate lazy_static;
+#[macro_use]
 extern crate proc_macro_error;
 #[macro_use]
 extern crate quote;
@@ -27,12 +29,31 @@ extern crate quote;
 extern crate syn;
 
 use proc_macro::TokenStream;
+use web_reference::prelude::*;
 
+mod extend;
 mod class;
 
 #[cfg(test)]
 mod publish_tests;
 
+lazy_static! {
+    pub(crate) static ref SPECS: WebReference = WebReference::load_specs().unwrap();
+}
+
+/// # `attributes` Attribute
+#[proc_macro_attribute]
+#[proc_macro_error]
+pub fn attributes(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let args = parse_macro_input!(attr as syn::AttributeArgs);
+    let mut source = parse_macro_input!(item as syn::ItemStruct);
+
+    let extended = extend::extend_struct_attributes(&mut source, &args);
+
+    (quote! {
+        #extended
+    }).into()
+}
 
 /// # `classes` Attribute
 #[proc_macro_attribute]
@@ -47,5 +68,19 @@ pub fn classes(attr: TokenStream, item: TokenStream) -> TokenStream {
         #source
 
         #impl_display
+    }).into()
+}
+
+/// # `events` Attribute
+#[proc_macro_attribute]
+#[proc_macro_error]
+pub fn events(attr: TokenStream, item: TokenStream) -> TokenStream {
+    let args = parse_macro_input!(attr as syn::AttributeArgs);
+    let mut source = parse_macro_input!(item as syn::ItemStruct);
+
+    let extended = extend::extend_struct_events(&mut source, &args);
+
+    (quote! {
+        #extended
     }).into()
 }

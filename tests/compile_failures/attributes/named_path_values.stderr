@@ -1,0 +1,5 @@
+error: not a valid attribute or tag
+ --> tests/compile_failures/attributes/named_path_values.rs:3:14
+  |
+3 | #[attributes(tag = "div")]
+  |              ^^^^^^^^^^^

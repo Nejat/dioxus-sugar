@@ -15,10 +15,12 @@ categories = ["GUI", "Web programming", "WebAssembly"]
 proc-macro = true
 
 [dependencies]
+lazy_static = "1"
 proc-macro-error = "1"
 proc-macro2 = "1"
 quote = "1"
 syn = { version = "1", features = ["full"] }
+web-reference = { git = "https://github.com/Nejat/web-reference.git", features = ["html5-specs"] }
 
 [dev-dependencies]
 trybuild = "1"

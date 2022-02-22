@@ -1,0 +1,11 @@
+error: not a valid event
+ --> tests/compile_failures/events/literal_values.rs:3:10
+  |
+3 | #[events(42)]
+  |          ^^
+
+error: not a valid event
+ --> tests/compile_failures/events/literal_values.rs:6:10
+  |
+6 | #[events("onclick")]
+  |          ^^^^^^^^^

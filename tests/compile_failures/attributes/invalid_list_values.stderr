@@ -1,0 +1,5 @@
+error: not a valid attribute or tag
+ --> tests/compile_failures/attributes/invalid_list_values.rs:3:14
+  |
+3 | #[attributes(list(div, "span"))]
+  |              ^^^^^^^^^^^^^^^^^

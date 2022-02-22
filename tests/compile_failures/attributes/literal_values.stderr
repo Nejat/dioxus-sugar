@@ -1,0 +1,11 @@
+error: not a valid attribute or tag
+ --> tests/compile_failures/attributes/literal_values.rs:3:14
+  |
+3 | #[attributes(42)]
+  |              ^^
+
+error: not a valid attribute or tag
+ --> tests/compile_failures/attributes/literal_values.rs:6:14
+  |
+6 | #[attributes("span")]
+  |              ^^^^^^
