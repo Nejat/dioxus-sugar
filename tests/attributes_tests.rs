@@ -1,4 +1,4 @@
-use syn::__private::bool;
+use dioxus::prelude::*;
 use trybuild::TestCases;
 
 use dioxus_sugar::attributes;
@@ -16,8 +16,8 @@ fn given_a_struct_with_attribute_extensions_it_should_extend_struct() {
     struct Sut;
 
     let sut = Sut {
-        href: String::from("https://duckduckgo.com"),
-        hidden: String::from("false"),
+        href: "https://duckduckgo.com",
+        hidden: "false",
         disabled: false,
     };
 
@@ -43,8 +43,8 @@ fn given_a_struct_with_attribute_extensions_and_existing_fields_it_should_extend
     let sut = Sut {
         group: String::from("Leader"),
         color: String::from("red"),
-        href: String::from("https://duckduckgo.com"),
-        hidden: String::from("false"),
+        href: "https://duckduckgo.com",
+        hidden: "false",
         disabled: false,
     };
 
@@ -72,17 +72,17 @@ fn given_a_struct_with_attribute_and_tag_extensions_and_exclude_listed_it_should
 
     let _sut = Sut {
         _group: String::from("Leader"),
-        draggable: String::default(),
-        lang: String::default(),
-        href: String::default(),
-        spellcheck: String::default(),
-        title: String::default(),
-        tabindex: String::default(),
-        translate: String::default(),
-        hidden: String::default(),
-        dir: String::default(),
-        contenteditable: String::default(),
-        accesskey: String::default(),
+        draggable: "",
+        lang: "",
+        href: "",
+        spellcheck: "",
+        title: "",
+        tabindex: "",
+        translate: "",
+        hidden: "",
+        dir: "",
+        contenteditable: "",
+        accesskey: "",
         disabled: bool::default(),
     };
 
@@ -90,6 +90,40 @@ fn given_a_struct_with_attribute_and_tag_extensions_and_exclude_listed_it_should
     struct _Sut2 {
         group: String
     }
+}
+
+#[test]
+fn given_a_struct_with_default_attribute_extensions_it_should_extend_struct() {
+    #[attributes(default(href, hidden, disabled = true))]
+    #[derive(Props, Eq, PartialEq)]
+    struct Sut;
+
+    let sut = Sut {
+        href: "https://duckduckgo.com",
+        hidden: "false",
+        disabled: false,
+    };
+
+    assert_eq!("https://duckduckgo.com", sut.href);
+    assert_eq!("false", sut.hidden);
+    assert!(!sut.disabled);
+}
+
+#[test]
+fn given_a_struct_with_optional_attribute_extensions_it_should_extend_struct() {
+    #[attributes(optional(href, hidden, disabled))]
+    #[derive(Props, Eq, PartialEq)]
+    struct Sut;
+
+    let sut = Sut {
+        href: Some("https://duckduckgo.com"),
+        hidden: Some("false"),
+        disabled: Some(false),
+    };
+
+    assert_eq!("https://duckduckgo.com", sut.href.unwrap());
+    assert_eq!("false", sut.hidden.unwrap());
+    assert!(!sut.disabled.unwrap());
 }
 
 #[test]

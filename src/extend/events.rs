@@ -10,15 +10,17 @@ use crate::SPECS;
 
 ///
 pub fn input_struct(input: &mut ItemStruct, args: &AttributeArgs) -> TokenStream {
+    const REQUIRES_LIFE_TIME: bool = true;
+
     let extensions = extract_event_extensions(args);
 
-    extend_input_struct(input, &extensions, write_event_extension)
+    extend_input_struct(input, &extensions, REQUIRES_LIFE_TIME, write_event_extension)
 }
 
 ///
 fn extract_event_extensions(args: &AttributeArgs) -> Vec<Extension> {
     let extensions = parse_extensions_args(
-        args, "event", validate_event_extension,
+        args, "event", false, validate_event_extension,
     ).flat_map(|ext| {
         if let Ok(event_category) = EventCategory::try_from(ext.name.to_string().as_str()) {
             SPECS.get_events_of_category(event_category).unwrap()
@@ -28,6 +30,8 @@ fn extract_event_extensions(args: &AttributeArgs) -> Vec<Extension> {
                     Extension {
                         name: Ident::new(&attr.name, ext.name.span()),
                         exclude: ext.exclude,
+                        optional: ext.optional,
+                        default: ext.default.clone(),
                     }
                 )).collect::<Vec<_>>()
         } else {

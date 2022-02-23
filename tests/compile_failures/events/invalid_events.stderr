@@ -1,0 +1,11 @@
+error: invalid event "onclik"
+ --> tests/compile_failures/events/invalid_events.rs:3:10
+  |
+3 | #[events(onclik)]
+  |          ^^^^^^
+
+error: invalid event "onkyprss"
+ --> tests/compile_failures/events/invalid_events.rs:6:28
+  |
+6 | #[events(keyboard, exclude(onkyprss))]
+  |                            ^^^^^^^^

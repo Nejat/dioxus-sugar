@@ -1,0 +1,5 @@
+error: not a valid event list
+ --> tests/compile_failures/events/default_list_not_supported.rs:3:10
+  |
+3 | #[events(default(onclick, onkeypress))]
+  |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

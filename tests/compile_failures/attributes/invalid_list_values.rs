@@ -1,6 +1,6 @@
 use dioxus_sugar::attributes;
 
-#[attributes(list(div, "span"))]
+#[attributes(add(div, "span"))]
 struct Props {}
 
 fn main() {}

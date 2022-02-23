@@ -8,13 +8,25 @@ use web_reference::prelude::*;
 use crate::extend::{extend_input_struct, Extension, net_extensions, parse_extensions_args};
 use crate::SPECS;
 
-// todo: optional attribute properties
-
 ///
 pub fn input_struct(input: &mut ItemStruct, args: &AttributeArgs) -> TokenStream {
     let extensions = extract_attribute_extensions(args);
 
-    extend_input_struct(input, &extensions, write_attribute_extension)
+    let requires_life_time = !extensions.iter()
+        .all(|ext| {
+            let name = ext.name.to_string();
+
+            SPECS.get_attributes(&name)
+                .map_or_else(
+                    || abort!(Span::call_site(), format!("could not find {name:?} attribute")),
+                    |attrs| matches!(
+                        attrs.values().next().unwrap().values,
+                        AttributeValue::Boolean { .. } | AttributeValue::YesNo { .. }
+                    ),
+                )
+        });
+
+    extend_input_struct(input, &extensions, requires_life_time, write_attribute_extension)
 }
 
 ///
@@ -36,10 +48,9 @@ fn attributes_of_tag(tag: &Tag) -> Vec<&Attribute> {
 ///
 fn extract_attribute_extensions(args: &AttributeArgs) -> Vec<Extension> {
     let extensions = parse_extensions_args(
-        args, "attribute or tag", validate_attribute_extension,
+        args, "attribute or tag", true, validate_attribute_extension,
     ).flat_map(|ext| {
         let name = ext.name.to_string();
-
 
         if name == "global" {
             SPECS.get_attributes_of_category(AttributeCategory::GlobalAttributes).unwrap().into_iter()
@@ -81,31 +92,65 @@ fn filter_attribute_key_value<'a>(ext: &'a Extension) -> impl Fn(&'a Attribute) 
                 Extension {
                     name: Ident::new(attr.name.as_str(), ext.name.span()),
                     exclude: ext.exclude,
+                    optional: ext.optional,
+                    default: ext.default.clone(),
                 }))
         }
 }
 
 ///
-fn write_attribute(attribute: &Attribute) -> TokenStream {
+fn write_attribute(attribute: &Attribute, life_time: &Option<Lifetime>, optional: bool) -> TokenStream {
     let attr_ident = Ident::new(&attribute.name, Span::call_site());
-    let ty = Ident::new(match &attribute.values {
-        AttributeValue::OnOff { .. } |
-        AttributeValue::Boolean { .. } => "bool",
-        AttributeValue::URLList { .. } => "Vec<String>",
-        _ => "String",
-    }, Span::call_site());
 
-    quote! { #attr_ident: #ty }
+    let life_time = match life_time {
+        Some(life_time) => quote! { #life_time },
+        None => quote! {}
+    };
+
+    let ty = match &attribute.values {
+        AttributeValue::OnOff { .. } |
+        AttributeValue::Boolean { .. } => quote! { bool },
+        AttributeValue::URLList { .. } => quote! { Vec<&#life_time str> },
+        _ => quote! { &#life_time str },
+    };
+
+    if optional {
+        quote! { #attr_ident: Option<#ty> }
+    } else {
+        quote! { #attr_ident: #ty }
+    }
 }
 
 ///
-fn write_attribute_extension(extension: &Extension, _life_time: &Option<Lifetime>) -> TokenStream {
+fn write_attribute_extension(extension: &Extension, life_time: &Option<Lifetime>) -> TokenStream {
     let name = extension.name.to_string();
+    let props_attr = if let Some(default) = &extension.default {
+        let lit = default.to_token_stream();
+
+        if lit.is_empty() {
+            quote! { #[props(default)] }
+        } else {
+            quote! { #[props(default = #lit)] }
+        }
+    } else if extension.optional {
+        quote! { #[props(optional)]}
+    } else {
+        quote! {}
+    };
 
     SPECS.get_attributes(&name)
         .map_or_else(
             || abort!(Span::call_site(), format!("could not find {name:?} attribute")),
-            |attrs| write_attribute(attrs.values().next().unwrap()),
+            |attrs| {
+                let html_attr = write_attribute(
+                    attrs.values().next().unwrap(), life_time, extension.optional,
+                );
+
+                quote! {
+                    #props_attr
+                    #html_attr
+                }
+            },
         )
 }
 

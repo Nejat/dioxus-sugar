@@ -1,0 +1,23 @@
+error: invalid attribute or tag "divv"
+ --> tests/compile_failures/attributes/invalid_attribute.rs:3:14
+  |
+3 | #[attributes(divv)]
+  |              ^^^^
+
+error: invalid attribute or tag "hrf"
+ --> tests/compile_failures/attributes/invalid_attribute.rs:6:27
+  |
+6 | #[attributes(div, exclude(hrf))]
+  |                           ^^^
+
+error: invalid attribute or tag "hrf"
+ --> tests/compile_failures/attributes/invalid_attribute.rs:9:27
+  |
+9 | #[attributes(div, default(hrf))]
+  |                           ^^^
+
+error: invalid attribute or tag "hrf"
+  --> tests/compile_failures/attributes/invalid_attribute.rs:12:28
+   |
+12 | #[attributes(div, optional(hrf))]
+   |                            ^^^

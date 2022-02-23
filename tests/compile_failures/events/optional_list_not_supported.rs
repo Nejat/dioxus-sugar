@@ -1,6 +1,6 @@
 use dioxus_sugar::events;
 
-#[events(more(onclick, "onkeypress"))]
+#[events(optional(onclick, onkeypress))]
 struct Props {}
 
 fn main() {}
