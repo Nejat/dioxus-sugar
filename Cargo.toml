@@ -23,5 +23,6 @@ syn = { version = "1", features = ["full"] }
 web-reference = { git = "https://github.com/Nejat/web-reference.git", features = ["html5-specs"] }
 
 [dev-dependencies]
+dioxus = "0.1"
 trybuild = "1"
 version-sync = "0.9"

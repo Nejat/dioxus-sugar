@@ -1,0 +1,5 @@
+error: Structs with unnamed fields are not supported
+ --> tests/compile_failures/attributes/unnammed_struct_fields.rs:4:1
+  |
+4 | struct Props(String);
+  | ^^^^^^^^^^^^^^^^^^^^^

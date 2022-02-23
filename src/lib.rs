@@ -15,7 +15,10 @@
 //!
 //! - `classes` attribute implements the [`Display`] trait for selected fields on a
 //!    properties `struct`
-//! - ``
+//! - `attributes` extends properties `struct` with standard html dom attributes, by name,
+//!    by tag, by tag category
+//! -  `events` extends properties `struct` with standard html dom events by name, by event
+//!    category
 //!
 //! [`Dioxus`] (https://dioxuslabs.com/)
 
@@ -37,6 +40,10 @@ mod class;
 
 #[cfg(test)]
 mod publish_tests;
+
+// todo: macro to apply props to component? analyze feasibility
+// todo: detailed documentation
+// todo: extend events by events of a tag
 
 lazy_static! {
     pub(crate) static ref SPECS: WebReference = WebReference::load_specs().unwrap();
