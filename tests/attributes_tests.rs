@@ -67,11 +67,11 @@ fn given_a_struct_with_attribute_and_tag_extensions_it_should_extend_struct() {
 fn given_a_struct_with_attribute_and_tag_extensions_and_exclude_listed_it_should_extend_struct_within_limits() {
     #[attributes(href, disabled, div, exclude(id, class, style))]
     struct Sut {
-        group: String
+        _group: String
     }
 
     let _sut = Sut {
-        group: String::from("Leader"),
+        _group: String::from("Leader"),
         draggable: String::default(),
         lang: String::default(),
         href: String::default(),

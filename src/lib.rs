@@ -44,6 +44,8 @@ mod publish_tests;
 // todo: macro to apply props to component? analyze feasibility
 // todo: detailed documentation
 // todo: extend events by events of a tag
+// todo: can't test html dom attribute, tag, event, etc. validity in failed compile tests
+//       specifically invalid attributes, invalid events and missing lifetime in events
 
 lazy_static! {
     pub(crate) static ref SPECS: WebReference = WebReference::load_specs().unwrap();

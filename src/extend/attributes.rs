@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::ToTokens;
-use syn::{AttributeArgs, ItemStruct, Path};
+use syn::{AttributeArgs, ItemStruct, Lifetime, Path};
 use web_reference::prelude::*;
 
 use crate::extend::{extend_input_struct, Extension, net_extensions, parse_extensions_args};
@@ -99,7 +99,7 @@ fn write_attribute(attribute: &Attribute) -> TokenStream {
 }
 
 ///
-fn write_attribute_extension(extension: &Extension) -> TokenStream {
+fn write_attribute_extension(extension: &Extension, _life_time: &Option<Lifetime>) -> TokenStream {
     let name = extension.name.to_string();
 
     SPECS.get_attributes(&name)

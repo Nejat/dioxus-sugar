@@ -1,8 +1,9 @@
-use proc_macro::Span;
-
-use proc_macro2::{Ident, TokenStream};
+use proc_macro2::{Ident, Span, TokenStream};
 use quote::ToTokens;
-use syn::{AttributeArgs, Fields, FieldsNamed, ItemStruct, Meta, NestedMeta, Path};
+use syn::{
+    AttributeArgs, Fields, FieldsNamed, GenericParam,
+    ItemStruct, Lifetime, Meta, NestedMeta, Path,
+};
 
 pub mod attributes;
 pub mod events;
@@ -19,10 +20,19 @@ pub struct Extension {
 
 ///
 pub fn extend_input_struct(
-    input: &mut ItemStruct, extensions: &[Extension], extend: fn(&Extension) -> TokenStream,
+    input: &mut ItemStruct, extensions: &[Extension], extend: fn(&Extension, &Option<Lifetime>) -> TokenStream,
 ) -> TokenStream {
     let ItemStruct { attrs, vis, struct_token, ident, generics, fields, .. } = input;
-    let extensions = extensions.iter().map(extend);
+
+    let life_time = generics.params.iter().find_map(
+        |param| if let GenericParam::Lifetime(life_time) = param {
+            Some(life_time.lifetime.clone())
+        } else {
+            None
+        }
+    );
+
+    let extensions = extensions.iter().map(|ext| extend(ext, &life_time));
 
     let fields = match fields {
         Fields::Named(FieldsNamed { named, .. }) => {
@@ -35,7 +45,7 @@ pub fn extend_input_struct(
     };
 
     quote! {
-        #(#attrs)* #vis #struct_token #generics #ident {
+        #(#attrs)* #vis #struct_token #ident #generics {
             #fields
             #(#extensions),*
         }

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::ToTokens;
-use syn::{AttributeArgs, ItemStruct, Path};
+use syn::{AttributeArgs, ItemStruct, Lifetime, Path};
 use web_reference::prelude::*;
 
 use crate::extend::{extend_input_struct, Extension, net_extensions, parse_extensions_args};
@@ -44,21 +44,27 @@ fn extract_event_extensions(args: &AttributeArgs) -> Vec<Extension> {
 }
 
 ///
-fn write_event(event: &Event) -> TokenStream {
-    let attr_ident = Ident::new(&event.name, Span::call_site());
-    let ty = Ident::new(event.event_objects.iter().next().unwrap().as_str(), Span::call_site());
-
-    quote! { #attr_ident: dioxus::events::#ty }
-}
-
-///
-fn write_event_extension(extension: &Extension) -> TokenStream {
+fn write_event_extension(extension: &Extension, life_time: &Option<Lifetime>) -> TokenStream {
     let name = extension.name.to_string();
+
+    let life_time = if let Some(life_time) = life_time {
+        life_time
+    } else {
+        abort!(
+            Span::call_site(),
+            "in order to extend properties with html dom events the struct requires a lifetime"
+        );
+    };
 
     SPECS.get_event(&name)
         .map_or_else(
-            || abort!(Span::call_site(), format!("could not find {name:?} event")),
-            write_event,
+            || abort!(extension.name, format!("could not find {name:?} event")),
+            |event| {
+                let attr_ident = Ident::new(&event.name, extension.name.span());
+                let ty = Ident::new(event.event_objects.iter().next().unwrap().as_str(), extension.name.span());
+
+                quote! { #attr_ident: dioxus::prelude::EventHandler<#life_time, dioxus::events::#ty> }
+            },
         )
 }
 
