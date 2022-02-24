@@ -13,7 +13,7 @@ struct Props<'a> {
 fn component<'a>(cx: Scope<'a, Props<'a>>) -> Element {
     cx.render(rsx! {
         div {
-            apply_attributes!{ cx; div, exclude(class, name, id) }
+            apply_attributes!{ cx; optional(div), exclude(class, name, id) }
             &cx.props.children
         }
     })
