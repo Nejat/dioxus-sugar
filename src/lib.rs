@@ -35,6 +35,7 @@ use proc_macro::TokenStream;
 
 use web_reference::prelude::*;
 
+mod common;
 mod extend;
 mod class;
 

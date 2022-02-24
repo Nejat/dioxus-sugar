@@ -5,6 +5,7 @@ use quote::ToTokens;
 use syn::{AttributeArgs, ItemStruct, Lifetime, Path};
 use web_reference::prelude::*;
 
+use crate::common::attributes_of_tag;
 use crate::extend::{extend_input_struct, Extension, net_extensions, parse_extensions_args};
 use crate::SPECS;
 
@@ -27,22 +28,6 @@ pub fn input_struct(input: &mut ItemStruct, args: &AttributeArgs) -> TokenStream
         });
 
     extend_input_struct(input, &extensions, requires_life_time, write_attribute_extension)
-}
-
-///
-fn attributes_of_tag(tag: &Tag) -> Vec<&Attribute> {
-    let attributes = tag.attributes.iter()
-        .chain(&tag.optional_attributes)
-        .filter_map(|attr| SPECS.get_attribute(attr.as_str()));
-
-    if tag.global_attributes {
-        attributes.chain(
-            SPECS.get_attributes_of_category(AttributeCategory::GlobalAttributes)
-                .unwrap().iter().copied()
-        ).collect::<Vec<_>>()
-    } else {
-        attributes.collect::<Vec<_>>()
-    }
 }
 
 ///
