@@ -1,8 +1,7 @@
 #![allow(dead_code)]
 
+use proc_macro2::Ident;
 use std::cmp::Ordering;
-
-use syn::ExprPath;
 
 mod parse;
 mod tokens;
@@ -49,11 +48,7 @@ impl AsRef<str> for Property {
 
 ///
 pub struct ApplyAttributes {
-    ///
-    pub(crate) context: ExprPath,
-
-    ///
-    pub(crate) splitter: Token![;],
+    pub(crate) element: Ident,
 
     ///
     pub(crate) attributes: Vec<Property>,

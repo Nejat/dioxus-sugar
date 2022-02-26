@@ -13,8 +13,13 @@ use crate::common::attributes_of_tag;
 impl Parse for ApplyAttributes {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            context: input.parse()?,
-            splitter: input.parse()?,
+            element: {
+                let elm = input.parse()?;
+
+                <Token![;]>::parse(input)?;
+
+                elm
+            },
             attributes: parse_attributes(input)?,
         })
     }

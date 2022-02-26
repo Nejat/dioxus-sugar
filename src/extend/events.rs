@@ -51,14 +51,12 @@ fn extract_event_extensions(args: &AttributeArgs) -> Vec<Extension> {
 fn write_event_extension(extension: &Extension, life_time: &Option<Lifetime>) -> TokenStream {
     let name = extension.name.to_string();
 
-    let life_time = if let Some(life_time) = life_time {
-        life_time
-    } else {
+    let life_time = life_time.as_ref().map_or_else(|| {
         abort!(
             Span::call_site(),
             "in order to extend properties with html dom events the struct requires a lifetime"
         );
-    };
+    }, |life_time| life_time);
 
     SPECS.get_event(&name)
         .map_or_else(

@@ -109,19 +109,20 @@ fn write_attribute(attribute: &Attribute, life_time: &Option<Lifetime>, optional
 ///
 fn write_attribute_extension(extension: &Extension, life_time: &Option<Lifetime>) -> TokenStream {
     let name = extension.name.to_string();
-    let props_attr = if let Some(default) = &extension.default {
-        let lit = default.to_token_stream();
-
-        if lit.is_empty() {
-            quote! { #[props(default)] }
+    let props_attr = extension.default.as_ref()
+        .map_or_else(|| if extension.optional {
+            quote! { #[props(optional)]}
         } else {
-            quote! { #[props(default = #lit)] }
-        }
-    } else if extension.optional {
-        quote! { #[props(optional)]}
-    } else {
-        quote! {}
-    };
+            quote! {}
+        }, |default| {
+            let lit = default.to_token_stream();
+
+            if lit.is_empty() {
+                quote! { #[props(default)] }
+            } else {
+                quote! { #[props(default = #lit)] }
+            }
+        });
 
     SPECS.get_attributes(&name)
         .map_or_else(

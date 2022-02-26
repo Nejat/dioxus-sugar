@@ -3,7 +3,10 @@ use std::fmt::{Debug, Formatter};
 
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::ToTokens;
-use syn::{AttributeArgs, Fields, FieldsNamed, GenericParam, Generics, ItemStruct, Lifetime, LifetimeDef, Lit, Meta, NestedMeta, Path};
+use syn::{
+    AttributeArgs, Fields, FieldsNamed, GenericParam, Generics,
+    ItemStruct, Lifetime, LifetimeDef, Lit, Meta, NestedMeta, Path,
+};
 use syn::punctuated::Punctuated;
 
 pub mod attributes;
