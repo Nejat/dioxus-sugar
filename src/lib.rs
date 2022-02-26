@@ -33,12 +33,8 @@ extern crate syn;
 
 use proc_macro::TokenStream;
 
-use quote::ToTokens;
 use web_reference::prelude::*;
 
-use crate::apply::ApplyAttributes;
-
-mod apply;
 mod class;
 mod common;
 mod extend;
@@ -93,10 +89,4 @@ pub fn events(attr: TokenStream, item: TokenStream) -> TokenStream {
     let extended = extend::events::input_struct(&mut source, &args);
 
     (quote! { #extended }).into()
-}
-
-///
-#[proc_macro]
-pub fn apply_attributes(tokens: TokenStream) -> TokenStream {
-    parse_macro_input!(tokens as ApplyAttributes).into_token_stream().into()
 }
