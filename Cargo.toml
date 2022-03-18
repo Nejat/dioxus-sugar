@@ -15,7 +15,7 @@ categories = ["GUI", "Web programming", "WebAssembly"]
 proc-macro = true
 
 [dependencies]
-lazy_static = "1"
+once_cell = { version = "1", features = ["parking_lot"] }
 proc-macro-error = "1"
 proc-macro2 = "1"
 quote = "1"

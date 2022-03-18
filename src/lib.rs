@@ -23,8 +23,6 @@
 //! [`Dioxus`] (https://dioxuslabs.com/)
 
 #[macro_use]
-extern crate lazy_static;
-#[macro_use]
 extern crate proc_macro_error;
 #[macro_use]
 extern crate quote;
@@ -32,6 +30,7 @@ extern crate quote;
 extern crate syn;
 
 use proc_macro::TokenStream;
+use once_cell::sync::Lazy;
 
 use web_reference::prelude::*;
 
@@ -47,9 +46,7 @@ mod publish_tests;
 // todo: look into replacing some collects with generic iterator??
 // todo: review html dom attribute value mappings
 
-lazy_static! {
-    pub(crate) static ref SPECS: WebReference = WebReference::load_specs().unwrap();
-}
+static SPECS: Lazy<WebReference> = Lazy::new(|| { WebReference::load_specs().unwrap() });
 
 /// # `attributes` Attribute
 #[proc_macro_attribute]
