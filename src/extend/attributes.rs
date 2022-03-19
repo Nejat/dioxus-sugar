@@ -6,7 +6,7 @@ use syn::{AttributeArgs, ItemStruct, Lifetime, Path};
 use web_reference::prelude::*;
 
 use crate::common::attributes_of_tag;
-use crate::extend::{extend_input_struct, Extension, net_extensions, parse_extensions_args};
+use crate::extend::{extend_input_struct, Extension, ExtType, net_extensions, parse_extensions_args};
 use crate::SPECS;
 
 ///
@@ -42,7 +42,7 @@ fn extract_attribute_extensions(args: &AttributeArgs) -> Vec<Extension> {
                 .filter_map(filter_attribute_key_value(&ext))
                 .collect::<Vec<_>>()
         } else if SPECS.is_valid_attribute(&name) {
-            vec![(format!("{}{}", ext.name, ext.exclude), ext)]
+            vec![(format!("{}{}", ext.name, ext.ext_type == ExtType::Exclude), ext)]
         } else if let Some(tag) = SPECS.get_tag(&name) {
             attributes_of_tag(tag).into_iter()
                 .filter_map(filter_attribute_key_value(&ext))
@@ -73,11 +73,10 @@ fn filter_attribute_key_value<'a>(ext: &'a Extension) -> impl Fn(&'a Attribute) 
             None
         } else {
             Some((
-                format!("{}{}", attr.name, ext.exclude),
+                format!("{}{}", attr.name, ext.ext_type == ExtType::Exclude),
                 Extension {
                     name: Ident::new(attr.name.as_str(), ext.name.span()),
-                    exclude: ext.exclude,
-                    optional: ext.optional,
+                    ext_type: ext.ext_type,
                     default: ext.default.clone(),
                 }))
         }
@@ -110,7 +109,7 @@ fn write_attribute(attribute: &Attribute, life_time: &Option<Lifetime>, optional
 fn write_attribute_extension(extension: &Extension, life_time: &Option<Lifetime>) -> TokenStream {
     let name = extension.name.to_string();
     let props_attr = extension.default.as_ref()
-        .map_or_else(|| if extension.optional {
+        .map_or_else(|| if extension.ext_type == ExtType::Optional {
             quote! { #[props(optional)]}
         } else {
             quote! {}
@@ -129,7 +128,9 @@ fn write_attribute_extension(extension: &Extension, life_time: &Option<Lifetime>
             || abort!(Span::call_site(), format!("could not find {name:?} attribute")),
             |attrs| {
                 let html_attr = write_attribute(
-                    attrs.values().next().unwrap(), life_time, extension.optional,
+                    attrs.values().next().unwrap(),
+                    life_time,
+                    extension.ext_type == ExtType::Optional,
                 );
 
                 quote! {

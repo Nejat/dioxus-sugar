@@ -29,8 +29,7 @@ fn extract_event_extensions(args: &AttributeArgs) -> Vec<Extension> {
                     attr.name.clone(),
                     Extension {
                         name: Ident::new(&attr.name, ext.name.span()),
-                        exclude: ext.exclude,
-                        optional: ext.optional,
+                        ext_type: ext.ext_type,
                         default: ext.default.clone(),
                     }
                 )).collect::<Vec<_>>()

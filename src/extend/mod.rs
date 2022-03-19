@@ -1,5 +1,6 @@
 use std::fmt;
 use std::fmt::{Debug, Formatter};
+use std::str::FromStr;
 
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::ToTokens;
@@ -19,10 +20,7 @@ pub struct Extension {
     name: Ident,
 
     ///
-    exclude: bool,
-
-    ///
-    optional: bool,
+    ext_type: ExtType,
 
     ///
     default: Option<Lit>,
@@ -34,8 +32,7 @@ impl Debug for Extension {
 
         fmt.debug_struct("Extension")
             .field("name", &self.name)
-            .field("exclude", &self.exclude)
-            .field("optional", &self.optional)
+            .field("ext_type", &self.ext_type)
             .field("default", &default)
             .finish()
     }
@@ -118,11 +115,11 @@ fn parse_generics(generics: &mut Generics, requires_life_time: bool) -> (TokenSt
 ///
 pub fn net_extensions(extensions: Vec<Extension>, error: &str) -> Vec<Extension> {
     let include = extensions.iter()
-        .filter_map(|ext| if ext.exclude { None } else { Some(ext.name.to_string()) })
+        .filter_map(|ext| if ext.ext_type == ExtType::Exclude { None } else { Some(ext.name.to_string()) })
         .collect::<Vec<_>>();
 
     let exclude = extensions.iter()
-        .filter_map(|ext| if ext.exclude { Some(ext.name.to_string()) } else { None })
+        .filter_map(|ext| if ext.ext_type == ExtType::Exclude { Some(ext.name.to_string()) } else { None })
         .collect::<Vec<_>>();
 
     if include.iter().all(|inc| exclude.contains(inc)) {
@@ -138,16 +135,42 @@ pub fn net_extensions(extensions: Vec<Extension>, error: &str) -> Vec<Extension>
 }
 
 ///
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub enum ExtType {
+    ///
+    Named,
+
+    ///
+    Default,
+
+    ///
+    Exclude,
+
+    ///
+    Optional,
+}
+
+impl FromStr for ExtType {
+    type Err = String;
+
+    fn from_str(source: &str) -> Result<Self, Self::Err> {
+        // only parses list types
+        match source.trim() {
+            "default" => Ok(Self::Default),
+            "exclude" => Ok(Self::Exclude),
+            "optional" => Ok(Self::Optional),
+            invalid => Err(format!("{invalid:?} is not a valid list"))
+        }
+    }
+}
+
+///
 pub fn parse_extensions_args<'a>(
     args: &'a AttributeArgs,
     attr_type: &'a str,
     supports_default: bool,
     validate_extension: fn(&'a Path),
 ) -> impl Iterator<Item=Extension> + 'a {
-    const DEFAULT: &str = "default";
-    const EXCLUDE: &str = "exclude";
-    const OPTIONAL: &str = "optional";
-
     args.iter()
         .flat_map(move |arg| match arg {
             NestedMeta::Meta(Meta::Path(path)) if path.get_ident().is_some() => {
@@ -155,8 +178,7 @@ pub fn parse_extensions_args<'a>(
 
                 vec![Extension {
                     name: path.get_ident().unwrap().clone(),
-                    exclude: false,
-                    optional: false,
+                    ext_type: ExtType::Named,
                     default: None,
                 }]
             }
@@ -164,12 +186,14 @@ pub fn parse_extensions_args<'a>(
             NestedMeta::Meta(Meta::List(list)) => {
                 let list_name = list.path.to_token_stream().to_string();
 
-                let (exclude, optional) = match list_name.as_str() {
-                    EXCLUDE => (true, false),
-                    OPTIONAL if supports_default => (false, true),
-                    DEFAULT if supports_default => (false, false),
-                    _ => abort!(&arg.to_token_stream(), format!(r#"not a valid {attr_type} list"#))
+                let ext_type = match ExtType::from_str(&list_name) {
+                    Ok(ext_type) => ext_type,
+                    Err(_err) => abort!(&arg.to_token_stream(), format!(r#"not valid for {attr_type}"#))
                 };
+
+                if !supports_default && ext_type == ExtType::Default {
+                    abort!(&arg.to_token_stream(), format!(r#"not a valid {attr_type} list"#));
+                }
 
                 list.nested.iter()
                     .flat_map(move |item| match item {
@@ -179,8 +203,7 @@ pub fn parse_extensions_args<'a>(
                             path.segments.iter()
                                 .map(move |seg| Extension {
                                     name: seg.ident.clone(),
-                                    exclude,
-                                    optional,
+                                    ext_type,
                                     default: None,
                                 }).collect::<Vec<_>>()
                         }
@@ -190,8 +213,7 @@ pub fn parse_extensions_args<'a>(
                             named.path.segments.iter()
                                 .map(move |seg| Extension {
                                     name: seg.ident.clone(),
-                                    exclude,
-                                    optional,
+                                    ext_type,
                                     default: Some(named.lit.clone()),
                                 }).collect::<Vec<_>>()
                         }
