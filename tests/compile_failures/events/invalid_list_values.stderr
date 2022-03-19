@@ -1,4 +1,4 @@
-error: not a valid event list
+error: not valid for event
  --> tests/compile_failures/events/invalid_list_values.rs:3:10
   |
 3 | #[events(more(onclick, "onkeypress"))]
