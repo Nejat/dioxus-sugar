@@ -1,16 +1,16 @@
 #[test]
 fn readme_usage_version() {
-    // version_sync::assert_markdown_deps_updated!("README.md");
+    version_sync::assert_markdown_deps_updated!("README.md");
 }
 
 #[test]
 fn readme_docs_link_version() {
-    // version_sync::assert_contains_regex!("README.md", "/dioxus-sugar/{version}/dioxus_sugar/");
+    version_sync::assert_contains_regex!("README.md", "/dioxus-sugar/{version}/dioxus_sugar/");
 }
 
 #[test]
 fn readme_examples_link_version() {
-    // version_sync::assert_contains_regex!("README.md", "/v{version}/examples");
+    version_sync::assert_contains_regex!("README.md", "/v{version}/examples");
 }
 
 #[test]
