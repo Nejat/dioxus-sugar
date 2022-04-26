@@ -47,5 +47,5 @@ fn given_a_struct_with_class_fields_and_classes_attr_should_display_fields() {
 
     let sut = Sut { field_one: "Jack", other_field: "jk1" };
 
-    assert_eq!("Jackjk1", format!("{}", sut));
+    assert_eq!("Jack jk1", format!("{}", sut));
 }

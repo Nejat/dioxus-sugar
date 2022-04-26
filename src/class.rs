@@ -50,13 +50,13 @@ pub fn impl_display_for_struct(
         included.fold(
             (String::new(), quote! {}),
             |(mut fmt, flds), nxt| {
-                fmt.push_str("{}");
+                fmt.push_str("{} ");
 
                 (fmt, quote! { #flds, self.#nxt })
             },
         ),
         |(mut fmt, flds), nxt| {
-            fmt.push_str("{}");
+            fmt.push_str("{} ");
 
             (fmt, quote! { #flds, self.#nxt })
         },
@@ -94,6 +94,8 @@ pub fn impl_display_for_struct(
             input.ident
         );
     } else {
+        let formatter = formatter.trim();
+
         quote! {
             write! {
                 fmt, #formatter #fields
