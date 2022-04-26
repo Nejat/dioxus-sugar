@@ -5,7 +5,7 @@ use quote::ToTokens;
 use syn::{AttributeArgs, ItemStruct, Lifetime, Path};
 use web_reference::prelude::*;
 
-use crate::extend::{extend_input_struct, Extension, net_extensions, parse_extensions_args};
+use crate::extend::{extend_input_struct, Extension, ExtType, net_extensions, parse_extensions_args};
 use crate::SPECS;
 
 ///
@@ -49,6 +49,7 @@ fn extract_event_extensions(args: &AttributeArgs) -> Vec<Extension> {
 ///
 fn write_event_extension(extension: &Extension, life_time: &Option<Lifetime>) -> TokenStream {
     let name = extension.name.to_string();
+    let optional = extension.ext_type == ExtType::Optional;
 
     let life_time = life_time.as_ref().map_or_else(|| {
         abort!(
@@ -64,7 +65,11 @@ fn write_event_extension(extension: &Extension, life_time: &Option<Lifetime>) ->
                 let attr_ident = Ident::new(&event.name, extension.name.span());
                 let ty = Ident::new(event.event_objects.iter().next().unwrap().as_str(), extension.name.span());
 
-                quote! { #attr_ident: dioxus::prelude::EventHandler<#life_time, dioxus::events::#ty> }
+                if optional {
+                    quote! { #attr_ident: Option<dioxus::prelude::EventHandler<#life_time, dioxus::events::#ty>> }
+                } else {
+                    quote! { #attr_ident: dioxus::prelude::EventHandler<#life_time, dioxus::events::#ty> }
+                }
             },
         )
 }

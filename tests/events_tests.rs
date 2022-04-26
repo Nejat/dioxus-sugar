@@ -1,3 +1,4 @@
+use dioxus::core::EventHandler;
 use trybuild::TestCases;
 
 use dioxus_sugar::events;
@@ -11,12 +12,22 @@ fn expected_events_compile_failures() {
 
 #[test]
 fn given_a_struct_with_event_extensions_it_should_extend_struct() {
-    #[events(onclick, onkeypress)]
-    struct _Sut<'a>;
+    #[events(onclick, optional(onkeypress))]
+    struct Sut<'a>;
+
+    let _sut = Sut {
+        onclick: EventHandler::default(),
+        onkeypress: None,
+    };
 }
 
 #[test]
 fn given_a_struct_with_event_extensions_and_excludes_listed_it_should_extend_struct_within_limits() {
     #[events(keyboard, exclude(onkeypress))]
-    struct _Sut<'a>;
+    struct Sut<'a>;
+
+    let _sut = Sut {
+        onkeydown: EventHandler::default(),
+        onkeyup: EventHandler::default(),
+    };
 }
