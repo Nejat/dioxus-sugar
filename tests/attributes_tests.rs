@@ -58,9 +58,28 @@ fn given_a_struct_with_attribute_extensions_and_existing_fields_it_should_extend
 #[test]
 fn given_a_struct_with_attribute_and_tag_extensions_it_should_extend_struct() {
     #[attributes(href, hidden, disabled, div)]
-    struct _Sut {
-        group: String
+    struct Sut {
+        _group: String
     }
+
+    let _sut = Sut {
+        _group: String::from("Leader"),
+        id: "",
+        class: "",
+        style: "",
+        draggable: "",
+        lang: "",
+        href: "",
+        spellcheck: "",
+        title: "",
+        tabindex: "",
+        translate: "",
+        hidden: "",
+        dir: "",
+        contenteditable: "",
+        accesskey: "",
+        disabled: bool::default(),
+    };
 }
 
 #[test]
@@ -85,11 +104,6 @@ fn given_a_struct_with_attribute_and_tag_extensions_and_exclude_listed_it_should
         accesskey: "",
         disabled: bool::default(),
     };
-
-    // #[attributes(href, disabled, div)]
-    struct _Sut2 {
-        group: String
-    }
 }
 
 #[test]
@@ -126,10 +140,31 @@ fn given_a_struct_with_optional_attribute_extensions_it_should_extend_struct() {
     assert!(!sut.disabled.unwrap());
 }
 
+// todo: bool, enum & number support instead of str
+// todo: revaluate basic group .. xmlns?
+
 #[test]
 fn given_a_struct_with_tag_extensions_it_should_extend_struct() {
-    #[attributes(button, div, basic)]
-    struct _Sut {
-        group: String
+    #[attributes(button, div, /*basic*/)]
+    struct Sut {
+        _group: String
     }
+
+    let _sut = Sut {
+        _group: String::from("Leader"),
+        accesskey: "",
+        class: "",
+        contenteditable: "true",
+        dir: "",
+        draggable: "true",
+        hidden: "false",
+        id: "bar",
+        lang: "en",
+        spellcheck: "false",
+        style: "",
+        tabindex: "3",
+        title: "",
+        translate: "",
+        // xmlns: ""
+    };
 }
