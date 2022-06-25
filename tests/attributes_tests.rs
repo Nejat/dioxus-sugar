@@ -35,9 +35,12 @@ fn given_a_struct_with_attribute_extensions_and_existing_fields_it_should_extend
     }
 
     #[attributes(href, hidden, disabled)]
+    #[rustfmt::skip]
     struct Sut {
         group: String,
+        // @formatter:off
         color: String
+        // @formatter:on
     }
 
     let sut = Sut {
@@ -59,7 +62,7 @@ fn given_a_struct_with_attribute_extensions_and_existing_fields_it_should_extend
 fn given_a_struct_with_attribute_and_tag_extensions_it_should_extend_struct() {
     #[attributes(href, hidden, disabled, div)]
     struct Sut {
-        _group: String
+        _group: String,
     }
 
     let _sut = Sut {
@@ -86,7 +89,7 @@ fn given_a_struct_with_attribute_and_tag_extensions_it_should_extend_struct() {
 fn given_a_struct_with_attribute_and_tag_extensions_and_exclude_listed_it_should_extend_struct_within_limits() {
     #[attributes(href, disabled, div, exclude(id, class, style))]
     struct Sut {
-        _group: String
+        _group: String,
     }
 
     let _sut = Sut {
@@ -147,7 +150,7 @@ fn given_a_struct_with_optional_attribute_extensions_it_should_extend_struct() {
 fn given_a_struct_with_tag_extensions_it_should_extend_struct() {
     #[attributes(button, div, /*basic*/)]
     struct Sut {
-        _group: String
+        _group: String,
     }
 
     let _sut = Sut {

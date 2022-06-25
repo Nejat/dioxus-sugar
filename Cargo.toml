@@ -23,6 +23,7 @@ syn = { version = "1", features = ["full"] }
 web-reference = { git = "https://github.com/Nejat/web-reference.git", features = ["html5-specs"] }
 
 [dev-dependencies]
-dioxus = { path = "../../rust-foss/dioxus" }
+#dioxus = { git = "https://github.com/Nejat/dioxus", branch = "master" }
+dioxus = { git = "https://github.com/Nejat/dioxus", branch = "noz/props_injections" }
 trybuild = "1"
 version-sync = "0.9"
